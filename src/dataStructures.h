@@ -2,6 +2,7 @@
 #define dataStructures_h
 
 #include <vector>
+#include <deque>
 #include <opencv2/core.hpp>
 
 
@@ -21,25 +22,31 @@ class RingBuffer
 private:
     // Circular Queue
     uint bufSize;
-    std::vector<FrameT> rBuff;
+    std::deque<FrameT> rBuff;
 
 public:
     RingBuffer(uint sizeIn){
         bufSize = sizeIn;
     }
 
-    void push_back(FrameT frame)
+    void push(FrameT frame)
     { 
-        if(rBuff.size()+1 <= bufSize){
+        if(rBuff.size()+1 <= bufSize)
+        {
             rBuff.push_back(frame);
         }
-        else{
-            rBuff.erase(rBuff.begin());
+        else
+        {
+            rBuff.pop_front();
             rBuff.push_back(frame);
         }
     }
 
-    typename std::vector<FrameT>::iterator end(){
+    typename std::deque<FrameT>::iterator begin(){
+        return rBuff.begin();
+    }
+
+    typename std::deque<FrameT>::iterator end(){
         return rBuff.end();
     }
 
